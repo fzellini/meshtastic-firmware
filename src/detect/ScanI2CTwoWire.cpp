@@ -263,8 +263,6 @@ void ScanI2CTwoWire::scanPort(I2CPort port)
                 break;
 #endif
             case INA_ADDR:
-            case INA_ADDR_ALTERNATE:
-            case INA_ADDR_WAVESHARE_UPS:
                 registerValue = getRegisterValue(ScanI2CTwoWire::RegisterLocation(addr, 0xFE), 2);
                 LOG_DEBUG("Register MFG_UID: 0x%x\n", registerValue);
                 if (registerValue == 0x5449) {
@@ -275,6 +273,19 @@ void ScanI2CTwoWire::scanPort(I2CPort port)
                     type = INA219;
                 }
                 break;
+            // additional INA sensor
+            case INA_ADDR_x41:
+                registerValue = getRegisterValue(ScanI2CTwoWire::RegisterLocation(addr, 0xFE), 2);
+                LOG_DEBUG("Register MFG_UID: 0x%x\n", registerValue);
+                if (registerValue == 0x5449) {
+                    LOG_INFO("INA260 sensor found at address 0x%x\n", (uint8_t)addr.address);
+                    type = INA260;
+                } else { // Assume INA219 if INA260 ID is not found
+                    LOG_INFO("INA219 sensor found at address 0x%x\n", (uint8_t)addr.address);
+                    type = INA219_x41;
+                }
+                break;
+
             case INA3221_ADDR:
                 registerValue = getRegisterValue(ScanI2CTwoWire::RegisterLocation(addr, 0xFE), 2);
                 LOG_DEBUG("Register MFG_UID: 0x%x\n", registerValue);
@@ -296,7 +307,6 @@ void ScanI2CTwoWire::scanPort(I2CPort port)
                 }
 
                 break;
-
             case SHT31_4x_ADDR:
                 registerValue = getRegisterValue(ScanI2CTwoWire::RegisterLocation(addr, 0x89), 2);
                 if (registerValue == 0x11a2) {

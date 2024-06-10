@@ -72,6 +72,7 @@ static const uint8_t ext_chrg_detect_value = EXT_CHRG_DETECT_VALUE;
 #if HAS_TELEMETRY && !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR && !defined(ARCH_PORTDUINO)
 INA260Sensor ina260Sensor;
 INA219Sensor ina219Sensor;
+INA219Sensor_x41 ina219Sensor_x41;
 INA3221Sensor ina3221Sensor;
 #endif
 
@@ -377,6 +378,9 @@ class AnalogBatteryLevel : public HasBatteryLevel
     {
         if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219].first == config.power.device_battery_ina_address) {
             return ina219Sensor.getBusVoltageMv();
+        } else if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219_x41].first ==
+                   config.power.device_battery_ina_address) {
+            return ina219Sensor_x41.getBusVoltageMv();
         } else if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA260].first ==
                    config.power.device_battery_ina_address) {
             return ina260Sensor.getBusVoltageMv();
@@ -396,6 +400,11 @@ class AnalogBatteryLevel : public HasBatteryLevel
             if (!ina219Sensor.isInitialized())
                 return ina219Sensor.runOnce() > 0;
             return ina219Sensor.isRunning();
+        } else if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219_x41].first ==
+                   config.power.device_battery_ina_address) {
+            if (!ina219Sensor_x41.isInitialized())
+                return ina219Sensor_x41.runOnce() > 0;
+            return ina219Sensor_x41.isRunning();
         } else if (nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA260].first ==
                    config.power.device_battery_ina_address) {
             if (!ina260Sensor.isInitialized())

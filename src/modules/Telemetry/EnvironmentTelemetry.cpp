@@ -101,6 +101,8 @@ int32_t EnvironmentTelemetryModule::runOnce()
                 result = sht4xSensor.runOnce();
             if (ina219Sensor.hasSensor())
                 result = ina219Sensor.runOnce();
+            if (ina219Sensor_x41.hasSensor())
+                result = ina219Sensor_x41.runOnce();
             if (ina260Sensor.hasSensor())
                 result = ina260Sensor.runOnce();
             if (veml7700Sensor.hasSensor())
@@ -279,8 +281,14 @@ bool EnvironmentTelemetryModule::sendTelemetry(NodeNum dest, bool phoneOnly)
         valid = valid && mcp9808Sensor.getMetrics(&m);
         hasSensor = true;
     }
-    if (ina219Sensor.hasSensor()) {
+    if (ina219Sensor.hasSensor() &&
+        config.power.device_battery_ina_address != nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219].first) {
         valid = valid && ina219Sensor.getMetrics(&m);
+        hasSensor = true;
+    }
+    if (ina219Sensor_x41.hasSensor() &&
+        config.power.device_battery_ina_address != nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219_x41].first) {
+        valid = valid && ina219Sensor_x41.getMetrics(&m);
         hasSensor = true;
     }
     if (ina260Sensor.hasSensor()) {
