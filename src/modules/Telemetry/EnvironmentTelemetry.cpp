@@ -334,12 +334,12 @@ bool EnvironmentTelemetryModule::getEnvironmentTelemetry(meshtastic_Telemetry *m
     }
     if (ina219Sensor.hasSensor() &&
         config.power.device_battery_ina_address != nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219].first) {
-        valid = valid && ina219Sensor.getMetrics(&m);
+        valid = valid && ina219Sensor.getMetrics(m);
         hasSensor = true;
     }
     if (ina219Sensor_x41.hasSensor() &&
         config.power.device_battery_ina_address != nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_INA219_x41].first) {
-        valid = valid && ina219Sensor_x41.getMetrics(&m);
+        valid = valid && ina219Sensor_x41.getMetrics(m);
         hasSensor = true;
     }
     if (ina260Sensor.hasSensor()) {
